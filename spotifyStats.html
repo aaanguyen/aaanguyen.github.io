@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="spotifyStats.css">
+</head>
+<body>
+    <div class="row">
+        <div id="short_term_artists" class="list">
+            <h3>Top Artists (Last 4 Weeks)</h3>
+        </div>
+        <div id="medium_term_artists" class="list">
+            <h3>Top Artists (Last 6 Months)</h3>
+        </div>
+        <div id="long_term_artists" class="list">
+            <h3>Top Artists (Last Several Years)</h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div id="short_term_tracks" class="list">
+            <h3>Top Tracks (Last 4 Weeks)</h3>
+        </div>
+        <div id="medium_term_tracks" class="list">
+            <h3>Top Tracks (Last 6 Months)</h3>
+        </div>
+        <div id="long_term_tracks" class="list">
+            <h3>Top Tracks (Last Several Years)</h3>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="spotifyStats.js"></script>
+</body>
+</html>
