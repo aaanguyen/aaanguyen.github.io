@@ -45,31 +45,40 @@ const headers = {
 };
 
 async function populate() {
-    for (type of types) {
-        for (time_range of time_ranges) {
+    for (time_range of time_ranges) {
+        for (type of types) {
             const query = `${type}?time_range=${time_range}&limit=50`;
             const obj = await axios.get(topTracks + query, { headers });
-            console.log(obj);
             const o_list = document.createElement('ol');
             if (type === 'tracks') {
-                for (track of obj.data.items) {
+                obj.data.items.forEach(function(track, idx) {
                     const li = document.createElement('li');
-                    li.innerText = `${track.artists[0].name} - ${track.name}`;
+                    if (idx % 2 === 1) {
+                        li.style.backgroundColor = '#222222';
+                    } else {
+                        li.style.backgroundColor = '#000000';
+                    }
+                    li.innerHTML = `<img src="${track.album.images[1].url}" class="track-img">  <span>${track.artists[0]
+                        .name} - ${track.name}</span>`;
                     o_list.appendChild(li);
-                    console.log(track.name);
-                }
-                console.log(`#${time_range}_${type}`);
-                document.querySelector(`#${time_range}_${type}`).appendChild(o_list);
+                });
             } else {
-                for (artist of obj.data.items) {
+                obj.data.items.forEach(function(artist, idx) {
+                    // const lastImgIdx = artist.images.length - 1;
                     const li = document.createElement('li');
-                    li.innerText = `${artist.name}`;
+                    if (idx % 2 === 1) {
+                        li.style.backgroundColor = '#222222';
+                    } else {
+                        li.style.backgroundColor = '#000000';
+                    }
+                    li.innerHTML = `<img src="${artist.images[1]
+                        .url}" class="artist-img">  <span>${artist.name}</span>`;
+
                     o_list.appendChild(li);
-                    console.log(artist.name);
-                }
-                console.log(`#${time_range}_${type}`);
-                document.querySelector(`#${time_range}_${type}`).appendChild(o_list);
+                    console.log(li);
+                });
             }
+            document.querySelector(`#${time_range}_${type}`).appendChild(o_list);
         }
     }
 }
