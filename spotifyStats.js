@@ -27,6 +27,8 @@ if (!_token) {
     )}&response_type=token`;
 }
 
+// const _token = '';
+
 const types = [
     'artists',
     'tracks'
@@ -44,43 +46,39 @@ const headers = {
     Authorization  : 'Bearer ' + _token
 };
 
-async function populate() {
+async function getData() {
+    const arr = [];
     for (time_range of time_ranges) {
         for (type of types) {
             const query = `${type}?time_range=${time_range}&limit=50`;
-            const obj = await axios.get(topTracks + query, { headers });
-            const o_list = document.createElement('ol');
-            if (type === 'tracks') {
-                obj.data.items.forEach(function(track, idx) {
-                    const li = document.createElement('li');
-                    if (idx % 2 === 1) {
-                        li.style.backgroundColor = '#222222';
-                    } else {
-                        li.style.backgroundColor = '#000000';
-                    }
-                    li.innerHTML = `<img src="${track.album.images[1].url}" class="track-img">  <span>${track.artists[0]
-                        .name} - ${track.name}</span>`;
-                    o_list.appendChild(li);
-                });
-            } else {
-                obj.data.items.forEach(function(artist, idx) {
-                    // const lastImgIdx = artist.images.length - 1;
-                    const li = document.createElement('li');
-                    if (idx % 2 === 1) {
-                        li.style.backgroundColor = '#222222';
-                    } else {
-                        li.style.backgroundColor = '#000000';
-                    }
-                    li.innerHTML = `<img src="${artist.images[1]
-                        .url}" class="artist-img">  <span>${artist.name}</span>`;
-
-                    o_list.appendChild(li);
-                    console.log(li);
-                });
-            }
-            document.querySelector(`#${time_range}_${type}`).appendChild(o_list);
+            arr.push(axios.get(topTracks + query, { headers }));
         }
     }
+    return await Promise.all(arr);
+}
+
+async function populate() {
+    const allData = await getData();
+    document.querySelectorAll('.list').forEach((list, listIdx) => {
+        const currentData = allData[listIdx].data.items;
+        const ol = document.createElement('ol');
+        currentData.forEach((item, itemIdx) => {
+            const li = document.createElement('li');
+            if (listIdx % 2 === 0) {
+                li.innerHTML = `<img src="${item.images[1].url}" class="artist-img">  <span>${item.name}</span>`;
+            } else {
+                li.innerHTML = `<img src="${item.album.images[1].url}" class="track-img">  <span>${item.artists[0]
+                    .name} - ${item.name}</span>`;
+            }
+            if (itemIdx % 2 === 1) {
+                li.style.backgroundColor = '#222222';
+            } else {
+                li.style.backgroundColor = '#000000';
+            }
+            ol.appendChild(li);
+        });
+        list.appendChild(ol);
+    });
 }
 
 populate();
